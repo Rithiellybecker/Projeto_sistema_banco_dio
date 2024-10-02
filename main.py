@@ -1,10 +1,13 @@
+import datetime
+
 def sistema():
     
     saldo = 0
     extrato = []
     limite_saque = 500  # Limite máximo por saque
     numero_saques = 0  # Número de saques realizados no dia
-    max_saques = 3 
+    numero_deposito = 0
+    max_operacao = 10 
     
     print("Escolha uma opção: ")
     
@@ -16,16 +19,22 @@ def sistema():
         
         if opcao == 1:
             valor = float(input("Digite o valor a ser depositado: "))
-            if valor <= 0:  # Verifica se o valor é negativo ou zero
+        
+            if numero_deposito >= max_operacao: 
+                print("Número máximo de operações atingido para hoje.")
+    
+            elif valor <= 0:  # Verifica se o valor é negativo ou zero
                 print("Depósito inválido! O valor deve ser maior que R$ 0,00.")
             else:
                 saldo += valor
-                extrato.append(f"Depósito de: R$ {valor:.2f}")#.append modifica o valor do extrato
+                now = datetime.datetime.now()  # Define a variável now
+                extrato.append(f"Deposito de R$ { valor:.2f} em {now.strftime('%d-%m-%y %H:%M')}")
+                numero_deposito += 1
                 print(f"Valor depositado: R$ {valor:.2f}")#.2f representa duas casas decimais depois da virgula
         
         elif opcao == 2:
-            if numero_saques >= max_saques:
-                print("Número máximo de saques atingido para hoje.")
+            if numero_saques >= max_operacao:
+                print("Número máximo de operações atingido para hoje.")
             else:
                 saque = float(input("Digite o valor a ser sacado: "))
                 if saque > saldo:
@@ -34,15 +43,17 @@ def sistema():
                     print(f"Valor máximo para saque é R$ {limite_saque:.2f}.")
                 else:
                     saldo -= saque
-                    extrato.append(f"Saque: R$ {saque:.2f}")
+                    now = datetime.datetime.now()  # Define a variável now
+                    extrato.append(f"Saque de R$ {saque:.2f} em {now.strftime('%d-%m-%y %H:%M')}")
                     numero_saques += 1 
                     print(f"Valor sacado: R$ {saque:.2f}")
+                    
             
         elif opcao == 3:
             print("\n --- Extrato ---")
             if not extrato:
                 print("Nenhuma transação realizada.")
-            else:
+            else:  
                 for transacao in extrato:
                     print(transacao)
             print(f"Saldo atual: R$ {saldo:.2f}")
@@ -52,7 +63,6 @@ def sistema():
         else:
             print("Opção inválida! Tente novamente.")
             
-
-3
+            
 sistema()
 
